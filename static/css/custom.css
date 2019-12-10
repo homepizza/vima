@@ -36,3 +36,15 @@ nav.uk-custom-navbar li a::before {
     transition: 0.3s ease-in-out;
     transition-property: right;
 }
+
+nav.right-sidebar {
+    display: block;
+    position: fixed;
+    width: 250px;
+    min-height: 100%;
+}
+
+div.content {
+    padding-left: 250px;
+    min-height: 100%;
+}
