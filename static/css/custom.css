@@ -1,3 +1,10 @@
+nav.uk-custom-navbar {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1;
+}
+
 nav.uk-custom-navbar.uk-navbar-container:not(.uk-navbar-transparent) {
     background: #600506;
 }
@@ -13,6 +20,7 @@ nav.uk-custom-navbar div.uk-navbar-right ul li a {
     color: #fff;
     text-decoration: none;
     font-weight: 300;
+    font-size: 15px;
 }
 
 nav.uk-custom-navbar ul.uk-navbar-nav li.uk-active a {
@@ -47,7 +55,55 @@ nav.right-sidebar {
     min-height: 100%;
 }
 
+nav.right-sidebar .content-sidebar {
+    margin: 20px;
+}
+
+nav.right-sidebar div.content-sidebar li.uk-nav-header {
+    color: #f3f3f3;
+    font-weight: bold;
+}
+
+nav.right-sidebar div.content-sidebar li.uk-active {
+    background-color: #fff;
+    border-radius: 3px;
+    padding: 0px 7px;
+    margin: 5px 0px;
+}
+
+nav.right-sidebar div.content-sidebar li.uk-parent {
+    padding: 0px 7px;
+}
+
+nav.right-sidebar div.content-sidebar li.uk-active a {
+    color: #222;
+    font-weight: bold;
+}
+
+nav.right-sidebar div.content-sidebar li.uk-active a:hover {
+    color: #222;
+    padding-left: 0px;
+}
+
+nav.right-sidebar .content-sidebar ul li a {
+    color: #fff;
+}
+
+nav.right-sidebar .content-sidebar ul li a:hover {
+    /* background-color: #fff;
+    border-radius: 3px;
+    padding-left: 5px;
+    color: #222;
+    font-weight: bold; */
+    color: greenyellow;
+}
+
 div.content {
     padding-left: 270px;
-    min-height: 100%;
+    margin-top: 80px;
+}
+
+.content h2:first-child {
+    font-weight: 700;
+    padding-top: 25px;
 }
