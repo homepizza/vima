@@ -1,10 +1,10 @@
-/*! UIkit 3.2.4 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
+/*! UIkit 3.2.3 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define('uikit', factory) :
     (global = global || self, global.UIkit = factory());
-}(this, (function () { 'use strict';
+}(this, function () { 'use strict';
 
     var objPrototype = Object.prototype;
     var hasOwnProperty = objPrototype.hasOwnProperty;
@@ -182,16 +182,6 @@
                     : isJQuery(element)
                         ? element.toArray()
                         : [];
-    }
-
-    function toWindow(element) {
-        element = toNode(element);
-        return isWindow(element)
-            ? element
-            : (isDocument(element)
-                    ? element
-                    : element.ownerDocument
-            ).defaultView;
     }
 
     function toList(value) {
@@ -1474,18 +1464,18 @@
                     clearTimeout(timer);
                     removeClass(element, 'uk-transition');
                     css(element, {
-                        transitionProperty: '',
-                        transitionDuration: '',
-                        transitionTimingFunction: ''
+                        'transition-property': '',
+                        'transition-duration': '',
+                        'transition-timing-function': ''
                     });
                     type === 'transitioncanceled' ? reject() : resolve();
                 }, {self: true});
 
                 addClass(element, 'uk-transition');
                 css(element, assign({
-                    transitionProperty: Object.keys(props).map(propName).join(','),
-                    transitionDuration: (duration + "ms"),
-                    transitionTimingFunction: timing
+                    'transition-property': Object.keys(props).map(propName).join(','),
+                    'transition-duration': (duration + "ms"),
+                    'transition-timing-function': timing
                 }, props));
 
             }); }
@@ -1640,7 +1630,7 @@
 
         if (flip) {
 
-            var boundaries = [getDimensions(toWindow(element))];
+            var boundaries = [getDimensions(getWindow(element))];
 
             if (boundary) {
                 boundaries.unshift(getDimensions(boundary));
@@ -1746,7 +1736,7 @@
             return {};
         }
 
-        var ref = toWindow(element);
+        var ref = getWindow(element);
         var top = ref.pageYOffset;
         var left = ref.pageXOffset;
 
@@ -1794,33 +1784,22 @@
         };
     }
 
-    function position(element, parent) {
-        var elementOffset = offset(element);
-        var parentOffset = offset(parent || toNode(element).offsetParent || toWindow(element).document.documentElement);
-
-        return {top: elementOffset.top - parentOffset.top, left: elementOffset.left - parentOffset.left};
-    }
-
-    function offsetPosition(element) {
-        var offset = [0, 0];
-
+    function position(element) {
         element = toNode(element);
 
-        do {
+        var parent = element.offsetParent || getDocEl(element);
+        var parentOffset = offset(parent);
+        var ref = ['top', 'left'].reduce(function (props, prop) {
+            var propName = ucfirst(prop);
+            props[prop] -= parentOffset[prop]
+                + toFloat(css(element, ("margin" + propName)))
+                + toFloat(css(parent, ("border" + propName + "Width")));
+            return props;
+        }, offset(element));
+        var top = ref.top;
+        var left = ref.left;
 
-            offset[0] += element.offsetTop;
-            offset[1] += element.offsetLeft;
-
-            if (css(element, 'position') === 'fixed') {
-                var win = toWindow(element);
-                offset[0] += win.pageYOffset;
-                offset[1] += win.pageXOffset;
-                return offset;
-            }
-
-        } while ((element = element.offsetParent));
-
-        return offset;
+        return {top: top, left: left};
     }
 
     var height = dimension('height');
@@ -1846,13 +1825,13 @@
                 value = css(element, prop);
                 value = value === 'auto' ? element[("offset" + propName)] : toFloat(value) || 0;
 
-                return value - boxModelAdjust(element, prop);
+                return value - boxModelAdjust(prop, element);
 
             } else {
 
                 css(element, prop, !value && value !== 0
                     ? ''
-                    : +value + boxModelAdjust(element, prop) + 'px'
+                    : +value + boxModelAdjust(prop, element) + 'px'
                 );
 
             }
@@ -1860,7 +1839,7 @@
         };
     }
 
-    function boxModelAdjust(element, prop, sizing) {
+    function boxModelAdjust(prop, element, sizing) {
         if ( sizing === void 0 ) sizing = 'border-box';
 
         return css(element, 'boxSizing') === sizing
@@ -1933,6 +1912,85 @@
         }
     }
 
+    function isInView(element, topOffset, leftOffset) {
+        if ( topOffset === void 0 ) topOffset = 0;
+        if ( leftOffset === void 0 ) leftOffset = 0;
+
+
+        if (!isVisible(element)) {
+            return false;
+        }
+
+        element = toNode(element);
+
+        var win = getWindow(element);
+        var client = element.getBoundingClientRect();
+        var bounding = {
+            top: -topOffset,
+            left: -leftOffset,
+            bottom: topOffset + height(win),
+            right: leftOffset + width(win)
+        };
+
+        return intersectRect(client, bounding) || pointInRect({x: client.left, y: client.top}, bounding);
+
+    }
+
+    function scrolledOver(element, heightOffset) {
+        if ( heightOffset === void 0 ) heightOffset = 0;
+
+
+        if (!isVisible(element)) {
+            return 0;
+        }
+
+        element = toNode(element);
+
+        var win = getWindow(element);
+        var doc = getDocument(element);
+        var elHeight = element.offsetHeight + heightOffset;
+        var ref = offsetPosition(element);
+        var top = ref[0];
+        var vp = height(win);
+        var vh = vp + Math.min(0, top - vp);
+        var diff = Math.max(0, vp - (height(doc) + heightOffset - (top + elHeight)));
+
+        return clamp(((vh + win.pageYOffset - top) / ((vh + (elHeight - (diff < vp ? diff : 0))) / 100)) / 100);
+    }
+
+    function scrollTop(element, top) {
+        element = toNode(element);
+
+        if (isWindow(element) || isDocument(element)) {
+            var ref = getWindow(element);
+            var scrollTo = ref.scrollTo;
+            var pageXOffset = ref.pageXOffset;
+            scrollTo(pageXOffset, top);
+        } else {
+            element.scrollTop = top;
+        }
+    }
+
+    function offsetPosition(element) {
+        var offset = [0, 0];
+
+        do {
+
+            offset[0] += element.offsetTop;
+            offset[1] += element.offsetLeft;
+
+            if (css(element, 'position') === 'fixed') {
+                var win = getWindow(element);
+                offset[0] += win.pageYOffset;
+                offset[1] += win.pageXOffset;
+                return offset;
+            }
+
+        } while ((element = element.offsetParent));
+
+        return offset;
+    }
+
     function toPx(value, property, element) {
         if ( property === void 0 ) property = 'width';
         if ( element === void 0 ) element = window;
@@ -1940,9 +1998,9 @@
         return isNumeric(value)
             ? +value
             : endsWith(value, 'vh')
-                ? percent(height(toWindow(element)), value)
+                ? percent(height(getWindow(element)), value)
                 : endsWith(value, 'vw')
-                    ? percent(width(toWindow(element)), value)
+                    ? percent(width(getWindow(element)), value)
                     : endsWith(value, '%')
                         ? percent(getDimensions(element)[property], value)
                         : toFloat(value);
@@ -1950,6 +2008,18 @@
 
     function percent(base, value) {
         return base * toFloat(value) / 100;
+    }
+
+    function getWindow(element) {
+        return isWindow(element) ? element : getDocument(element).defaultView;
+    }
+
+    function getDocument(element) {
+        return toNode(element).ownerDocument;
+    }
+
+    function getDocEl(element) {
+        return getDocument(element).documentElement;
     }
 
     /*
@@ -2027,33 +2097,50 @@
     MouseTracker.prototype = {
 
         positions: [],
+        position: null,
 
         init: function() {
             var this$1 = this;
 
 
             this.positions = [];
+            this.position = null;
 
-            var position;
-            this.unbind = on(document, 'mousemove', function (e) { return position = getEventPos(e, 'page'); });
-            this.interval = setInterval(function () {
+            var ticking = false;
+            this.unbind = on(document, 'mousemove', function (e) {
 
-                if (!position) {
+                if (ticking) {
                     return;
                 }
 
-                this$1.positions.push(position);
+                setTimeout(function () {
 
-                if (this$1.positions.length > 5) {
-                    this$1.positions.shift();
-                }
-            }, 50);
+                    var time = Date.now();
+                    var ref = this$1.positions;
+                    var length = ref.length;
+
+                    if (length && (time - this$1.positions[length - 1].time > 100)) {
+                        this$1.positions.splice(0, length);
+                    }
+
+                    this$1.positions.push({time: time, x: e.pageX, y: e.pageY});
+
+                    if (this$1.positions.length > 5) {
+                        this$1.positions.shift();
+                    }
+
+                    ticking = false;
+                }, 5);
+
+                ticking = true;
+            });
 
         },
 
         cancel: function() {
-            this.unbind && this.unbind();
-            this.interval && clearInterval(this.interval);
+            if (this.unbind) {
+                this.unbind();
+            }
         },
 
         movesTo: function(target) {
@@ -2063,61 +2150,37 @@
             }
 
             var p = offset(target);
-            var left = p.left;
-            var right = p.right;
-            var top = p.top;
-            var bottom = p.bottom;
-
-            var ref = this.positions;
-            var prevPosition = ref[0];
             var position = last(this.positions);
-            var path = [prevPosition, position];
+            var ref = this.positions;
+            var prevPos = ref[0];
 
-            if (pointInRect(position, p)) {
+            if (p.left <= position.x && position.x <= p.right && p.top <= position.y && position.y <= p.bottom) {
                 return false;
             }
 
-            var diagonals = [[{x: left, y: top}, {x: right, y: bottom}], [{x: left, y: bottom}, {x: right, y: top}]];
+            var points = [
+                [{x: p.left, y: p.top}, {x: p.right, y: p.bottom}],
+                [{x: p.right, y: p.top}, {x: p.left, y: p.bottom}]
+            ];
 
-            return diagonals.some(function (diagonal) {
-                var intersection = intersect(path, diagonal);
-                return intersection && pointInRect(intersection, p);
-            });
+            if (p.right <= position.x) ; else if (p.left >= position.x) {
+                points[0].reverse();
+                points[1].reverse();
+            } else if (p.bottom <= position.y) {
+                points[0].reverse();
+            } else if (p.top >= position.y) {
+                points[1].reverse();
+            }
+
+            return !!points.reduce(function (result, point) {
+                return result + (slope(prevPos, point[0]) < slope(position, point[0]) && slope(prevPos, point[1]) > slope(position, point[1]));
+            }, 0);
         }
 
     };
 
-    // Inspired by http://paulbourke.net/geometry/pointlineplane/
-    function intersect(ref, ref$1) {
-        var ref_0 = ref[0];
-        var x1 = ref_0.x;
-        var y1 = ref_0.y;
-        var ref_1 = ref[1];
-        var x2 = ref_1.x;
-        var y2 = ref_1.y;
-        var ref$1_0 = ref$1[0];
-        var x3 = ref$1_0.x;
-        var y3 = ref$1_0.y;
-        var ref$1_1 = ref$1[1];
-        var x4 = ref$1_1.x;
-        var y4 = ref$1_1.y;
-
-
-        var denominator = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
-
-        // Lines are parallel
-        if (denominator === 0) {
-            return false;
-        }
-
-        var ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / denominator;
-
-        if (ua < 0) {
-            return false;
-        }
-
-        // Return a object with the x and y coordinates of the intersection
-        return {x: x1 + ua * (x2 - x1), y: y1 + ua * (y2 - y1)};
+    function slope(a, b) {
+        return (b.y - a.y) / (b.x - a.x);
     }
 
     var strats = {};
@@ -2432,156 +2495,6 @@
 
     }
 
-    function isInView(element, offsetTop, offsetLeft) {
-        if ( offsetTop === void 0 ) offsetTop = 0;
-        if ( offsetLeft === void 0 ) offsetLeft = 0;
-
-
-        if (!isVisible(element)) {
-            return false;
-        }
-
-        var parents = overflowParents(element).concat(element);
-
-        for (var i = 0; i < parents.length - 1; i++) {
-            var ref = offset(getViewport(parents[i]));
-            var top = ref.top;
-            var left = ref.left;
-            var bottom = ref.bottom;
-            var right = ref.right;
-            var vp = {
-                top: top - offsetTop,
-                left: left - offsetLeft,
-                bottom: bottom + offsetTop,
-                right: right + offsetLeft
-            };
-
-            var client = offset(parents[i + 1]);
-
-            if (!intersectRect(client, vp) && !pointInRect({x: client.left, y: client.top}, vp)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    function scrollTop(element, top) {
-        element = toNode(element);
-
-        if (isWindow(element) || isDocument(element)) {
-            element = getScrollingElement(element);
-        }
-
-        element.scrollTo(0, top);
-    }
-
-    function scrollIntoView(element, ref) {
-        if ( ref === void 0 ) ref = {};
-        var duration = ref.duration; if ( duration === void 0 ) duration = 1000;
-        var offset = ref.offset; if ( offset === void 0 ) offset = 0;
-
-
-        if (!isVisible(element)) {
-            return;
-        }
-
-        var parents = overflowParents(element).concat(element);
-        duration /= parents.length - 1;
-
-        var promise = Promise.resolve();
-        var loop = function ( i ) {
-            promise = promise.then(function () { return new Promise(function (resolve) {
-
-                    var scrollElement = parents[i];
-                    var element = parents[i + 1];
-
-                    var scrollTop = scrollElement.scrollTop;
-                    var top = position(element, getViewport(scrollElement)).top - offset;
-
-                    var start = Date.now();
-                    var step = function () {
-
-                        var percent = ease(clamp((Date.now() - start) / duration));
-
-                        scrollElement.scrollTo(0, scrollTop + top * percent);
-
-                        // scroll more if we have not reached our destination
-                        if (percent !== 1) {
-                            requestAnimationFrame(step);
-                        } else {
-                            resolve();
-                        }
-
-                    };
-
-                    step();
-                }); }
-            );
-        };
-
-        for (var i = 0; i < parents.length - 1; i++) loop( i );
-
-        return promise;
-
-        function ease(k) {
-            return 0.5 * (1 - Math.cos(Math.PI * k));
-        }
-
-    }
-
-    function scrolledOver(element, heightOffset) {
-        if ( heightOffset === void 0 ) heightOffset = 0;
-
-
-        if (!isVisible(element)) {
-            return 0;
-        }
-
-        var scrollElement = last(scrollParents(element));
-        var scrollHeight = scrollElement.scrollHeight;
-        var scrollTop = scrollElement.scrollTop;
-        var viewport = getViewport(scrollElement);
-        var viewportHeight = offset(viewport).height;
-        var viewportTop = offsetPosition(element)[0] - scrollTop - offsetPosition(scrollElement)[0];
-        var viewportDist = Math.min(viewportHeight, viewportTop + scrollTop);
-
-        var top = viewportTop - viewportDist;
-        var dist = Math.min(
-            offset(element).height + heightOffset + viewportDist,
-            scrollHeight - (viewportTop + scrollTop),
-            scrollHeight - viewportHeight
-        );
-
-        return clamp(-1 * top / dist);
-    }
-
-    function scrollParents(element, overflowRe) {
-        if ( overflowRe === void 0 ) overflowRe = /auto|scroll/;
-
-        var scrollEl = getScrollingElement(element);
-        return element
-            ? parents(element, '*').filter(function (parent) { return parent === scrollEl
-                || overflowRe.test(css(parent, 'overflow'))
-                && parent.scrollHeight > offset(parent).height; }
-            ).reverse()
-            : [scrollEl];
-    }
-
-    function getViewport(scrollElement) {
-        return scrollElement === getScrollingElement(scrollElement) ? window : scrollElement;
-    }
-
-    function overflowParents(element) {
-        return scrollParents(element, /auto|scroll|hidden/);
-    }
-
-    function getScrollingElement(element) {
-        var ref = toWindow(element);
-        var document = ref.document;
-        return document.scrollingElement || document.documentElement;
-    }
-
     var IntersectionObserver = 'IntersectionObserver' in window
         ? window.IntersectionObserver
         : /*@__PURE__*/(function () {
@@ -2657,7 +2570,6 @@
 
 
     var util = /*#__PURE__*/Object.freeze({
-        __proto__: null,
         ajax: ajax,
         getImage: getImage,
         transition: transition,
@@ -2677,11 +2589,14 @@
         positionAt: positionAt,
         offset: offset,
         position: position,
-        offsetPosition: offsetPosition,
         height: height,
         width: width,
         boxModelAdjust: boxModelAdjust,
         flipPosition: flipPosition,
+        isInView: isInView,
+        scrolledOver: scrolledOver,
+        scrollTop: scrollTop,
+        offsetPosition: offsetPosition,
         toPx: toPx,
         ready: ready,
         index: index,
@@ -2752,7 +2667,6 @@
         toFloat: toFloat,
         toNode: toNode,
         toNodes: toNodes,
-        toWindow: toWindow,
         toList: toList,
         toMs: toMs,
         isEqual: isEqual,
@@ -2786,13 +2700,7 @@
         getStyles: getStyles,
         getStyle: getStyle,
         getCssVar: getCssVar,
-        propName: propName,
-        isInView: isInView,
-        scrollTop: scrollTop,
-        scrollIntoView: scrollIntoView,
-        scrolledOver: scrolledOver,
-        scrollParents: scrollParents,
-        getViewport: getViewport
+        propName: propName
     });
 
     function componentAPI (UIkit) {
@@ -2822,7 +2730,7 @@
 
                 return component.options.functional
                     ? new component({data: isPlainObject(element) ? element : [].concat( argsArray )})
-                    : !element ? init(element) : $$(element).map(init)[0];
+                    : element && element.nodeType ? init(element) : $$(element).map(init)[0];
 
                 function init(element) {
 
@@ -3988,11 +3896,6 @@
 
                             if (!state) {
                                 this$1._toggle(content, false);
-                            } else {
-                                var toggle = $(this$1.$props.toggle, el);
-                                if (!isInView(toggle)) {
-                                    scrollIntoView(toggle);
-                                }
                             }
 
                             el._wrapper = null;
@@ -4077,7 +3980,8 @@
                 pending = true;
                 fastdom.write(function () { return pending = false; });
 
-                UIkit.update(null, e.type);
+                var target = e.target;
+                UIkit.update(target.nodeType !== 1 ? document.body : target, e.type);
 
             }, {passive: true, capture: true});
 
@@ -4379,6 +4283,7 @@
             delayShow: 0,
             delayHide: 800,
             clsDrop: false,
+            hoverIdle: 200,
             animation: ['uk-animation-fade'],
             cls: 'uk-open'
         },
@@ -4490,32 +4395,6 @@
 
             {
 
-                name: 'toggleshow',
-
-                self: true,
-
-                handler: function(e, toggle) {
-                    e.preventDefault();
-                    this.show(toggle);
-                }
-
-            },
-
-            {
-
-                name: 'togglehide',
-
-                self: true,
-
-                handler: function(e) {
-                    e.preventDefault();
-                    this.hide();
-                }
-
-            },
-
-            {
-
                 name: pointerEnter,
 
                 filter: function() {
@@ -4523,23 +4402,56 @@
                 },
 
                 handler: function(e) {
-                    if (!isTouch(e)) {
-                        this.clearTimers();
+
+                    if (isTouch(e)) {
+                        return;
                     }
+
+                    if (active
+                        && active !== this
+                        && active.toggle
+                        && includes(active.toggle.mode, 'hover')
+                        && !within(e.target, active.toggle.$el)
+                        && !pointInRect({x: e.pageX, y: e.pageY}, offset(active.$el))
+                    ) {
+                        active.hide(false);
+                    }
+
+                    e.preventDefault();
+                    this.show(this.toggle);
                 }
 
             },
 
             {
 
-                name: pointerLeave,
+                name: 'toggleshow',
 
-                filter: function() {
-                    return includes(this.mode, 'hover');
-                },
+                handler: function(e, toggle) {
 
-                handler: function(e) {
-                    if (!isTouch(e) && !matches(this.$el, ':hover')) {
+                    if (toggle && !includes(toggle.target, this.$el)) {
+                        return;
+                    }
+
+                    e.preventDefault();
+                    this.show(toggle || this.toggle);
+                }
+
+            },
+
+            {
+
+                name: ("togglehide " + pointerLeave),
+
+                handler: function(e, toggle) {
+
+                    if (isTouch(e) || toggle && !includes(toggle.target, this.$el)) {
+                        return;
+                    }
+
+                    e.preventDefault();
+
+                    if (this.toggle && includes(this.toggle.mode, 'hover')) {
                         this.hide();
                     }
                 }
@@ -4568,9 +4480,6 @@
 
                 handler: function() {
                     var this$1 = this;
-
-
-                    active = this;
 
                     this.tracker.init();
                     trigger(this.$el, 'updatearia');
@@ -4661,36 +4570,60 @@
 
             show: function(toggle, delay) {
                 var this$1 = this;
-                if ( toggle === void 0 ) toggle = this.toggle;
                 if ( delay === void 0 ) delay = true;
 
 
-                if (this.isToggled() && toggle && this.toggle && toggle.$el !== this.toggle.$el) {
-                    this.hide(false);
-                }
+                var show = function () { return !this$1.isToggled() && this$1.toggleElement(this$1.$el, true); };
+                var tryShow = function () {
 
-                this.toggle = toggle;
+                    this$1.toggle = toggle || this$1.toggle;
 
-                this.clearTimers();
+                    this$1.clearTimers();
 
-                if (this.isActive()) {
-                    return;
-                }
-
-                if (active) {
-
-                    if (delay && active.isDelaying) {
-                        this.showTimer = setTimeout(this.show, 10);
+                    if (this$1.isActive()) {
                         return;
+                    } else if (delay && active && active !== this$1 && active.isDelaying) {
+                        this$1.showTimer = setTimeout(this$1.show, 10);
+                        return;
+                    } else if (this$1.isParentOf(active)) {
+
+                        if (active.hideTimer) {
+                            active.hide(false);
+                        } else {
+                            return;
+                        }
+
+                    } else if (this$1.isChildOf(active)) {
+
+                        active.clearTimers();
+
+                    } else if (active && !this$1.isChildOf(active) && !this$1.isParentOf(active)) {
+
+                        var prev;
+                        while (active && active !== prev && !this$1.isChildOf(active)) {
+                            prev = active;
+                            active.hide(false);
+                        }
+
                     }
 
-                    while (active && !within(this.$el, active.$el)) {
-                        active.hide(false);
+                    if (delay && this$1.delayShow) {
+                        this$1.showTimer = setTimeout(show, this$1.delayShow);
+                    } else {
+                        show();
                     }
+
+                    active = this$1;
+                };
+
+                if (toggle && this.toggle && toggle.$el !== this.toggle.$el) {
+
+                    once(this.$el, 'hide', tryShow);
+                    this.hide(false);
+
+                } else {
+                    tryShow();
                 }
-
-                this.showTimer = setTimeout(function () { return !this$1.isToggled() && this$1.toggleElement(this$1.$el, true); }, delay && this.delayShow || 0);
-
             },
 
             hide: function(delay) {
@@ -4702,10 +4635,10 @@
 
                 this.clearTimers();
 
-                this.isDelaying = getPositionedElements(this.$el).some(function (el) { return this$1.tracker.movesTo(el); });
+                this.isDelaying = this.tracker.movesTo(this.$el);
 
                 if (delay && this.isDelaying) {
-                    this.hideTimer = setTimeout(this.hide, 50);
+                    this.hideTimer = setTimeout(this.hide, this.hoverIdle);
                 } else if (delay && this.delayHide) {
                     this.hideTimer = setTimeout(hide, this.delayHide);
                 } else {
@@ -4723,6 +4656,14 @@
 
             isActive: function() {
                 return active === this;
+            },
+
+            isChildOf: function(drop) {
+                return drop && drop !== this && within(this.$el, drop.$el);
+            },
+
+            isParentOf: function(drop) {
+                return drop && drop !== this && within(drop.$el, this.$el);
             },
 
             position: function() {
@@ -4750,11 +4691,6 @@
         }
 
     };
-
-    function getPositionedElements(el) {
-        var result = css(el, 'position') !== 'static' ? [el] : [];
-        return result.concat(result.map.call(el.children, getPositionedElements));
-    }
 
     function delayOn(el, type, fn) {
         var off = once(el, type, function () { return off = on(el, type, fn); }
@@ -5047,18 +4983,6 @@
 
             {
 
-                write: function(ref) {
-                    var stacks = ref.stacks;
-
-                    toggleClass(this.$el, this.clsStack, stacks);
-                },
-
-                events: ['resize']
-
-            },
-
-            {
-
                 read: function(ref) {
                     var rows = ref.rows;
 
@@ -5070,8 +4994,6 @@
                             rows.map(function (row) { return row.reverse(); });
                         }
 
-                    } else {
-                        return false;
                     }
 
                     var transitionInProgress = rows.some(function (elements) { return elements.some(Transition.inProgress); });
@@ -5231,7 +5153,7 @@
 
                     this.elements.forEach(function (el) {
                         var height = toFloat(css(el, 'minHeight'));
-                        if (height && (this$1.forceHeight || Math.round(height + boxModelAdjust(el, 'height', 'content-box')) >= el.offsetHeight)) {
+                        if (height && (this$1.forceHeight || Math.round(height + boxModelAdjust('height', el, 'content-box')) >= el.offsetHeight)) {
                             css(el, 'height', height);
                         }
                     });
@@ -5327,7 +5249,7 @@
     }
 
     function getHeights(elements) {
-        var heights = elements.map(function (el) { return offset(el).height - boxModelAdjust(el, 'height', 'content-box'); });
+        var heights = elements.map(function (el) { return offset(el).height - boxModelAdjust('height', el, 'content-box'); });
         var max = Math.max.apply(null, heights);
 
         return {heights: heights, max: max};
@@ -5362,7 +5284,7 @@
                 }
 
                 var minHeight = '';
-                var box = boxModelAdjust(this.$el, 'height', 'content-box');
+                var box = boxModelAdjust('height', this.$el, 'content-box');
 
                 if (this.expand) {
 
@@ -7150,15 +7072,15 @@
 
     // Chrome in responsive mode zooms page upon opening offcanvas
     function suppressUserScale() {
-        getViewport$1().content += ',user-scalable=0';
+        getViewport().content += ',user-scalable=0';
     }
 
     function resumeUserScale() {
-        var viewport = getViewport$1();
+        var viewport = getViewport();
         viewport.content = viewport.content.replace(/,user-scalable=0$/, '');
     }
 
-    function getViewport$1() {
+    function getViewport() {
         return $('meta[name="viewport"]', document.head) || append(document.head, '<meta name="viewport">');
     }
 
@@ -7275,10 +7197,36 @@
 
                 el = el && $(el) || document.body;
 
-                if (trigger(this.$el, 'beforescroll', [this, el])) {
-                    scrollIntoView(el, this.$props).then(function () { return trigger(this$1.$el, 'scrolled', [this$1, el]); }
-                    );
+                var docHeight = height(document);
+                var winHeight = height(window);
+
+                var target = offset(el).top - this.offset;
+                if (target + winHeight > docHeight) {
+                    target = docHeight - winHeight;
                 }
+
+                if (!trigger(this.$el, 'beforescroll', [this, el])) {
+                    return;
+                }
+
+                var start = Date.now();
+                var startY = window.pageYOffset;
+                var step = function () {
+
+                    var currentY = startY + (target - startY) * ease(clamp((Date.now() - start) / this$1.duration));
+
+                    scrollTop(window, currentY);
+
+                    // scroll more if we have not reached our destination
+                    if (currentY !== target) {
+                        requestAnimationFrame(step);
+                    } else {
+                        trigger(this$1.$el, 'scrolled', [this$1, el]);
+                    }
+
+                };
+
+                step();
 
             }
 
@@ -7299,6 +7247,10 @@
         }
 
     };
+
+    function ease(k) {
+        return 0.5 * (1 - Math.cos(Math.PI * k));
+    }
 
     var Scrollspy = {
 
@@ -7454,14 +7406,14 @@
                 return $$('a[href^="#"]', $el).filter(function (el) { return el.hash; });
             },
 
-            targets: function() {
-                return $$(this.links.map(function (el) { return escape(el.hash).substr(1); }).join(','));
-            },
-
             elements: function(ref) {
                 var selector = ref.closest;
 
-                return closest($$(this.targets.map(function (el) { return ("[href=\"#" + (el.id) + "\"]"); }).join(',')), selector || '*');
+                return closest(this.links, selector || '*');
+            },
+
+            targets: function() {
+                return $$(this.links.map(function (el) { return escape(el.hash).substr(1); }).join(','));
             }
 
         },
@@ -7480,44 +7432,42 @@
 
             {
 
-                read: function() {
+                read: function(data) {
                     var this$1 = this;
 
 
-                    var ref = this.targets;
-                    var length = ref.length;
+                    var scroll = window.pageYOffset + this.offset + 1;
+                    var max = height(document) - height(window) + this.offset;
 
-                    if (!length || !isVisible(this.$el)) {
-                        return false;
-                    }
+                    data.active = false;
 
-                    var scrollElement = last(scrollParents(this.targets[0]));
-                    var scrollTop = scrollElement.scrollTop;
-                    var scrollHeight = scrollElement.scrollHeight;
-                    var viewport = getViewport(scrollElement);
-                    var scroll = scrollTop;
-                    var max = scrollHeight - offset(viewport).height;
-                    var active = false;
+                    this.targets.every(function (el, i) {
 
-                    if (scroll === max) {
-                        active = length - 1;
-                    } else {
+                        var ref = offset(el);
+                        var top = ref.top;
+                        var last = i + 1 === this$1.targets.length;
 
-                        this.targets.every(function (el, i) {
-                            var ref = position(el, viewport);
-                            var top = ref.top;
-                            if (top - this$1.offset <= 0) {
-                                active = i;
-                                return true;
-                            }
-                        });
-
-                        if (active === false && this.overflow) {
-                            active = 0;
+                        if (!this$1.overflow && (i === 0 && top > scroll || last && top + el.offsetTop < scroll)) {
+                            return false;
                         }
-                    }
 
-                    return {active: active};
+                        if (!last && offset(this$1.targets[i + 1]).top <= scroll) {
+                            return true;
+                        }
+
+                        if (scroll >= max) {
+                            for (var j = this$1.targets.length - 1; j > i; j--) {
+                                if (isInView(this$1.targets[j])) {
+                                    el = this$1.targets[j];
+                                    break;
+                                }
+                            }
+                        }
+
+                        return !(data.active = $(filter(this$1.links, ("[href=\"#" + (el.id) + "\"]"))));
+
+                    });
+
                 },
 
                 write: function(ref) {
@@ -7527,8 +7477,8 @@
                     this.links.forEach(function (el) { return el.blur(); });
                     removeClass(this.elements, this.cls);
 
-                    if (active !== false) {
-                        trigger(this.$el, 'active', [active, addClass(this.elements[active], this.cls)]);
+                    if (active) {
+                        trigger(this.$el, 'active', [active, addClass(this.closest ? closest(active, this.closest) : active, this.cls)]);
                     }
 
                 },
@@ -8246,7 +8196,7 @@
 
     }
 
-    UIkit.version = '3.2.4';
+    UIkit.version = '3.2.3';
 
     core(UIkit);
 
@@ -8545,12 +8495,13 @@
     }
 
     function getPositionWithMargin(el) {
-        var ref = offset(el);
+        var ref = el.getBoundingClientRect();
         var height = ref.height;
         var width = ref.width;
         var ref$1 = position(el);
         var top = ref$1.top;
         var left = ref$1.left;
+        top += toFloat(css(el, 'marginTop'));
 
         return {top: top, left: left, height: height, width: width};
     }
@@ -9592,7 +9543,7 @@
                 );
 
                 if (!force && !prev) {
-                    this._translate(1);
+                    this._transitioner.translate(1);
                     return Promise.resolve();
                 }
 
@@ -10698,7 +10649,7 @@
                 }
 
                 var prev = percent;
-                percent = ease(scrolledOver(this.target) / (this.viewport || 1), this.easing);
+                percent = ease$1(scrolledOver(this.target) / (this.viewport || 1), this.easing);
 
                 return {
                     percent: percent,
@@ -10725,7 +10676,7 @@
 
     };
 
-    function ease(percent, easing) {
+    function ease$1(percent, easing) {
         return clamp(percent * (1 - (easing - easing * percent)));
     }
 
@@ -10772,10 +10723,10 @@
 
         var from = prev
             ? getLeft(prev, list, center)
-            : getLeft(next, list, center) + offset(next).width * dir;
+            : getLeft(next, list, center) + bounds(next).width * dir;
         var to = next
             ? getLeft(next, list, center)
-            : from + offset(prev).width * dir * (isRtl ? -1 : 1);
+            : from + bounds(prev).width * dir * (isRtl ? -1 : 1);
 
         return {
 
@@ -10829,7 +10780,7 @@
                 css(list, 'transform', translate(clamp(
                     -to + (distance - distance * percent),
                     -getWidth(list),
-                    offset(list).width
+                    bounds(list).width
                 ) * (isRtl ? -1 : 1), 'px'));
 
                 this.updateTranslates();
@@ -10868,7 +10819,7 @@
 
                 return sortBy(slides(list).filter(function (slide) {
                     var slideLeft = getElLeft(slide, list);
-                    return slideLeft >= left && slideLeft + offset(slide).width <= offset(list).width + left;
+                    return slideLeft >= left && slideLeft + bounds(slide).width <= bounds(list).width + left;
                 }), 'offsetLeft');
 
             },
@@ -10902,23 +10853,27 @@
     }
 
     function getMax(list) {
-        return Math.max(0, getWidth(list) - offset(list).width);
+        return Math.max(0, getWidth(list) - bounds(list).width);
     }
 
     function getWidth(list) {
-        return slides(list).reduce(function (right, el) { return offset(el).width + right; }, 0);
+        return slides(list).reduce(function (right, el) { return bounds(el).width + right; }, 0);
     }
 
     function getMaxWidth(list) {
-        return slides(list).reduce(function (right, el) { return Math.max(right, offset(el).width); }, 0);
+        return slides(list).reduce(function (right, el) { return Math.max(right, bounds(el).width); }, 0);
     }
 
     function centerEl(el, list) {
-        return offset(list).width / 2 - offset(el).width / 2;
+        return bounds(list).width / 2 - bounds(el).width / 2;
     }
 
     function getElLeft(el, list) {
-        return (position(el).left + (isRtl ? offset(el).width - offset(list).width : 0)) * (isRtl ? -1 : 1);
+        return (position(el).left + (isRtl ? bounds(el).width - bounds(list).width : 0)) * (isRtl ? -1 : 1);
+    }
+
+    function bounds(el) {
+        return el.getBoundingClientRect();
     }
 
     function triggerUpdate$1(el, type, data) {
@@ -10957,7 +10912,7 @@
             finite: function(ref) {
                 var finite = ref.finite;
 
-                return finite || Math.ceil(getWidth(this.list)) < offset(this.list).width + getMaxWidth(this.list) + this.center;
+                return finite || Math.ceil(getWidth(this.list)) < bounds(this.list).width + getMaxWidth(this.list) + this.center;
             },
 
             maxIndex: function() {
@@ -10989,7 +10944,7 @@
                 var sets = ref.sets;
 
 
-                var width = offset(this.list).width / (this.center ? 2 : 1);
+                var width = bounds(this.list).width / (this.center ? 2 : 1);
 
                 var left = 0;
                 var leftCenter = width;
@@ -10997,7 +10952,7 @@
 
                 sets = sets && this.slides.reduce(function (sets, slide, i) {
 
-                    var ref = offset(slide);
+                    var ref = bounds(slide);
                     var slideWidth = ref.width;
                     var slideRight = slideLeft + slideWidth;
 
@@ -11010,7 +10965,7 @@
                         if (!includes(sets, i)) {
 
                             var cmp = this$1.slides[i + 1];
-                            if (this$1.center && cmp && slideWidth < leftCenter - offset(cmp).width / 2) {
+                            if (this$1.center && cmp && slideWidth < leftCenter - bounds(cmp).width / 2) {
                                 leftCenter -= slideWidth;
                             } else {
                                 leftCenter = width;
@@ -11056,7 +11011,7 @@
                 });
 
                 if (this.length && !this.dragging && !this.stack.length) {
-                    this._translate(1);
+                    this._getTransitioner().translate(1);
                 }
 
             },
@@ -11090,7 +11045,7 @@
                 }
 
                 this.duration = speedUp(this.avgWidth / this.velocity)
-                    * (offset(
+                    * (bounds(
                         this.dir < 0 || !this.slides[this.prevIndex]
                             ? this.slides[this.index]
                             : this.slides[this.prevIndex]
@@ -11141,7 +11096,7 @@
                 }
 
                 var next = this.slides[index];
-                var width = offset(this.list).width / 2 - offset(next).width / 2;
+                var width = bounds(this.list).width / 2 - bounds(next).width / 2;
                 var j = 0;
 
                 while (width > 0) {
@@ -11149,7 +11104,7 @@
                     var slide = this.slides[slideIndex];
 
                     css(slide, 'order', slideIndex > index ? -2 : -1);
-                    width -= offset(slide).width;
+                    width -= bounds(slide).width;
                 }
 
             },
@@ -11462,7 +11417,7 @@
                     height = Math.min(this.maxHeight, height);
                 }
 
-                return {height: height - boxModelAdjust(this.list, 'height', 'content-box')};
+                return {height: height - boxModelAdjust(this.list, 'content-box')};
             },
 
             write: function(ref) {
@@ -11506,8 +11461,7 @@
             clsNoDrag: 'uk-sortable-nodrag',
             clsEmpty: 'uk-sortable-empty',
             clsCustom: '',
-            handle: false,
-            pos: {}
+            handle: false
         },
 
         created: function() {
@@ -11517,7 +11471,10 @@
                 var fn = this$1[key];
                 this$1[key] = function (e) {
                     this$1.scrollY = window.pageYOffset;
-                    assign(this$1.pos, getEventPos(e, 'page'));
+                    var ref = getEventPos(e, 'page');
+                    var x = ref.x;
+                    var y = ref.y;
+                    this$1.pos = {x: x, y: y};
 
                     fn(e);
                 };
@@ -11552,6 +11509,8 @@
                         top: clamp(this.pos.y + this.origin.top, 0, bottom - this.drag.offsetHeight),
                         left: clamp(this.pos.x + this.origin.left, 0, right - this.drag.offsetWidth)
                     });
+
+                    trackScroll(this.pos);
 
                 }
 
@@ -11620,8 +11579,6 @@
                 addClass(document.documentElement, this.clsDragState);
 
                 trigger(this.$el, 'start', [this, this.placeholder]);
-
-                trackScroll(this.pos);
 
                 this.move(e);
             },
@@ -11772,43 +11729,67 @@
     }
 
     var trackTimer;
-    function trackScroll(pos) {
+    function trackScroll(ref) {
+        var x = ref.x;
+        var y = ref.y;
 
-        trackTimer = setInterval(function () {
 
-            var x = pos.x;
-            var y = pos.y;
-            scrollParents(document.elementFromPoint(x - window.pageXOffset, y - window.pageYOffset)).some(function (scrollEl) {
+        clearTimeout(trackTimer);
 
-                var scroll = scrollEl.scrollTop;
-                var scrollHeight = scrollEl.scrollHeight;
+        scrollParents(document.elementFromPoint(x - window.pageXOffset, y - window.pageYOffset)).some(function (scrollEl) {
 
-                var ref = offset(getViewport(scrollEl));
-                var top = ref.top;
-                var bottom = ref.bottom;
-                var height = ref.height;
+            var scroll = scrollEl.scrollTop;
+            var scrollHeight = scrollEl.scrollHeight;
 
-                if (top < y && top + 30 > y) {
-                    scroll -= 5;
-                } else if (bottom > y && bottom - 30 < y) {
-                    scroll += 5;
-                } else {
-                    return;
-                }
+            if (getScrollingElement() === scrollEl) {
+                scrollEl = window;
+                scrollHeight -= window.innerHeight;
+            }
 
-                if (scroll > 0 && scroll < scrollHeight - height) {
+            var ref = offset(scrollEl);
+            var top = ref.top;
+            var bottom = ref.bottom;
+
+            if (top < y && top + 30 > y) {
+                scroll -= 5;
+            } else if (bottom > y && bottom - 20 < y) {
+                scroll += 5;
+            }
+
+            if (scroll > 0 && scroll < scrollHeight) {
+                return trackTimer = setTimeout(function () {
                     scrollTop(scrollEl, scroll);
-                    return true;
-                }
+                    trackScroll({x: x, y: y});
+                }, 10);
+            }
 
-            });
-
-        }, 15);
+        });
 
     }
 
     function untrackScroll() {
-        clearInterval(trackTimer);
+        clearTimeout(trackTimer);
+    }
+
+    var overflowRe = /auto|scroll/;
+
+    function scrollParents(element) {
+        var scrollEl = getScrollingElement();
+        return parents$1(element, function (parent) { return parent === scrollEl || overflowRe.test(css(parent, 'overflow')); });
+    }
+
+    function parents$1(element, fn) {
+        var parents = [];
+        do {
+            if (fn(element)) {
+                parents.unshift(element);
+            }
+        } while (element && (element = element.parentElement));
+        return parents;
+    }
+
+    function getScrollingElement() {
+        return document.scrollingElement || document.documentElement;
     }
 
     var obj$1;
@@ -12159,4 +12140,4 @@
 
     return UIkit;
 
-})));
+}));

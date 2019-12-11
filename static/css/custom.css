@@ -1,22 +1,25 @@
-.uk-custom-navbar.uk-navbar-container:not(.uk-navbar-transparent) {
+nav.uk-custom-navbar.uk-navbar-container:not(.uk-navbar-transparent) {
     background: #600506;
 }
 
-.uk-custom-navbar .uk-navbar-nav li a {
+nav.uk-custom-navbar ul.uk-navbar-nav li a {
     color: #fff;
     font-size: 13px;
     font-family: 'ProximaNova', 'Helvetica', sans-serif;
     position: relative;
-    /* text-transform: uppercase;
-    transition: .1s ease-in-out;
-    transition-property: color,background-color; */
 }
 
-nav.uk-custom-navbar li.uk-active a {
+nav.uk-custom-navbar div.uk-navbar-right ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 300;
+}
+
+nav.uk-custom-navbar ul.uk-navbar-nav li.uk-active a {
     color: #f3b300;
 }
 
-nav.uk-custom-navbar li a:hover {
+nav.uk-custom-navbar ul.uk-navbar-nav li a:hover {
     color: #f3b300;
 }
 
@@ -45,6 +48,6 @@ nav.right-sidebar {
 }
 
 div.content {
-    padding-left: 250px;
+    padding-left: 270px;
     min-height: 100%;
 }
