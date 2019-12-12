@@ -1,3 +1,7 @@
+html {
+    background-color: #ffeed5;
+}
+
 nav.uk-custom-navbar {
     position: fixed;
     width: 100%;
@@ -98,12 +102,41 @@ nav.right-sidebar .content-sidebar ul li a:hover {
     color: greenyellow;
 }
 
-div.content {
-    padding-left: 270px;
+div.content-header {
+    padding-left: 250px;
     margin-top: 80px;
+}
+
+div.content-bar h2 {
+    background-color: #fff;
+    padding: 15px 100px;
+    font-style: italic;
+    font-weight: 600;
+}
+
+div.content {
+    padding-left: 30px;
 }
 
 .content h2:first-child {
     font-weight: 700;
     padding-top: 25px;
+}
+
+.uk-custom-container {
+    max-width: 85%;
+    margin-top: 30px;
+    padding-top: 20px;
+}
+
+div.container-card {
+    background-color: #fff;
+    border-radius: 3px;
+    min-height: 650px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .2);
+}
+
+div.container-dashboard {
+    max-width: 88%;
+    padding: 0px !important;
 }

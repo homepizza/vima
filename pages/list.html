@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <!-- Meta information -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>VIMA</title>
+
+    <!-- Styles -->
+    <link rel="shortcut icon" href="../vima.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../static/uikit/css/uikit.min.css">
+    <link rel="stylesheet" href="../static/css/custom.css">
+</head>
+<body id="bg-color">
+    <!-- Desktop menu -->
+    <nav class="uk-navbar-container uk-custom-navbar uk-visible@m" uk-navbar>
+        <div class="uk-navbar-left uk-margin-left">
+            <a class="uk-navbar-item uk-logo" href="">
+                <img data-src="../static/images/logo_short.png" alt="Хоум пицца" width="85" uk-img>
+            </a>
+            <ul class="uk-navbar-nav">
+                <li class="uk-active"><a href="../index.html">Витрина</a></li>
+                <li><a href="../cms.html">Информация (CMS)</a></li>
+                <li><a href="../offers.html">Вакансии и кандидаты</a></li>
+                <li>
+                    <a href="#"><s>Акции и промокоды</s></a>
+                </li>
+                <li><a href="#"><s>Рассылки</s></a></li>
+                <li><a href="../report.html">Отчеты</a></li>
+            </ul>
+        </div>
+        <div class="uk-navbar-right uk-margin-right">
+            <ul class="uk-iconnav">
+                <li>
+                    <a href="">
+                        <span uk-icon="users"></span>
+                        <span>Маркетолог</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span uk-icon="sign-out"></span>
+                        <span>Выйти</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Mobile menu -->
+    <nav class="uk-navbar uk-navbar-container uk-custom-navbar uk-hidden@m">
+        <div class="uk-navbar-left">
+            <a class="uk-navbar-toggle" href="#" style="color: #fff;">
+                <span uk-navbar-toggle-icon></span> <span class="uk-margin-small-left">Меню</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Left Sidebar -->
+    <nav class="right-sidebar uk-background-secondary">
+        <div class="content-sidebar uk-nav-parent-icon">
+            <ul class="uk-nav uk-nav-default" uk-nav>
+                <li class="uk-nav-header">Справочники</li>
+                <li class="uk-active">
+                    <a href="#">
+                        <span class="uk-margin-small-right" uk-icon="icon: file-text"></span> Категории блюд
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="uk-margin-small-right" uk-icon="icon: file-text"></span> Фильтры блюд
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="uk-margin-small-right" uk-icon="icon: file-text"></span> Модификаторы
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="uk-margin-small-right" uk-icon="icon: file-text"></span> Иконки ингредиентов
+                    </a>
+                </li>
+                <li class="uk-nav-header">Управление</li>
+                <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: clock"></span> Работа сайта</a></li>
+                <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: image"></span> Слайдер</a></li>
+                <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: thumbnails"></span> Блюда</a></li>
+                <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: cart"></span> Настройки оформления</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Content block -->
+    <div class="content-header uk-text-right">
+            <div class="content-bar">
+                <h2>Категории блюд</h2>
+            </div>
+            <div class="uk-container uk-custom-container container-card content uk-text-left">
+                    <div class="uk-overflow-auto">
+                        <table class="uk-table uk-table-hover uk-table-middle uk-table-divider">
+                            <thead>
+                                <tr>
+                                    <th class="uk-table-shrink"></th>
+                                    <th class="uk-table-shrink">Preserve</th>
+                                    <th class="uk-table-expand">Expand + Link</th>
+                                    <th class="uk-width-small">Truncate</th>
+                                    <th class="uk-table-shrink uk-text-nowrap">Shrink + Nowrap</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input class="uk-checkbox" type="checkbox"></td>
+                                    <td><img class="uk-preserve-width uk-border-circle" src="../media/images/avatar.jpg" width="40" alt=""></td>
+                                    <td class="uk-table-link">
+                                        <a class="uk-link-reset" href="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</a>
+                                    </td>
+                                    <td class="uk-text-truncate">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</td>
+                                    <td class="uk-text-nowrap">Lorem ipsum dolor</td>
+                                </tr>
+                                <tr>
+                                    <td><input class="uk-checkbox" type="checkbox"></td>
+                                    <td><img class="uk-preserve-width uk-border-circle" src="../media/images/avatar.jpg" width="40" alt=""></td>
+                                    <td class="uk-table-link">
+                                        <a class="uk-link-reset" href="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</a>
+                                    </td>
+                                    <td class="uk-text-truncate">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</td>
+                                    <td class="uk-text-nowrap">Lorem ipsum dolor</td>
+                                </tr>
+                                <tr>
+                                    <td><input class="uk-checkbox" type="checkbox"></td>
+                                    <td><img class="uk-preserve-width uk-border-circle" src="../media/images/avatar.jpg" width="40" alt=""></td>
+                                    <td class="uk-table-link">
+                                        <a class="uk-link-reset" href="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</a>
+                                    </td>
+                                    <td class="uk-text-truncate">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</td>
+                                    <td class="uk-text-nowrap">Lorem ipsum dolor</td>
+                                </tr>
+                                <tr>
+                                    <td><input class="uk-checkbox" type="checkbox"></td>
+                                    <td><img class="uk-preserve-width uk-border-circle" src="../media/images/avatar.jpg" width="40" alt=""></td>
+                                    <td class="uk-table-link">
+                                        <a class="uk-link-reset" href="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</a>
+                                    </td>
+                                    <td class="uk-text-truncate">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</td>
+                                    <td class="uk-text-nowrap">Lorem ipsum dolor</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+            </div>
+        </div>
+
+
+</body>
+<script src="../static/uikit/js/uikit.min.js"></script>
+<script src="../static/uikit/js/uikit-icons.min.js"></script>
+</html>
