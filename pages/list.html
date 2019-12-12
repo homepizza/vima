@@ -97,56 +97,174 @@
                 <h2>Категории блюд</h2>
             </div>
             <div class="uk-container uk-custom-container container-card content uk-text-left">
-                    <div class="uk-overflow-auto">
-                        <table class="uk-table uk-table-hover uk-table-middle uk-table-divider">
-                            <thead>
-                                <tr>
-                                    <th class="uk-table-shrink"></th>
-                                    <th class="uk-table-shrink">Preserve</th>
-                                    <th class="uk-table-expand">Expand + Link</th>
-                                    <th class="uk-width-small">Truncate</th>
-                                    <th class="uk-table-shrink uk-text-nowrap">Shrink + Nowrap</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><input class="uk-checkbox" type="checkbox"></td>
-                                    <td><img class="uk-preserve-width uk-border-circle" src="../media/images/avatar.jpg" width="40" alt=""></td>
-                                    <td class="uk-table-link">
-                                        <a class="uk-link-reset" href="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</a>
-                                    </td>
-                                    <td class="uk-text-truncate">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</td>
-                                    <td class="uk-text-nowrap">Lorem ipsum dolor</td>
-                                </tr>
-                                <tr>
-                                    <td><input class="uk-checkbox" type="checkbox"></td>
-                                    <td><img class="uk-preserve-width uk-border-circle" src="../media/images/avatar.jpg" width="40" alt=""></td>
-                                    <td class="uk-table-link">
-                                        <a class="uk-link-reset" href="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</a>
-                                    </td>
-                                    <td class="uk-text-truncate">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</td>
-                                    <td class="uk-text-nowrap">Lorem ipsum dolor</td>
-                                </tr>
-                                <tr>
-                                    <td><input class="uk-checkbox" type="checkbox"></td>
-                                    <td><img class="uk-preserve-width uk-border-circle" src="../media/images/avatar.jpg" width="40" alt=""></td>
-                                    <td class="uk-table-link">
-                                        <a class="uk-link-reset" href="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</a>
-                                    </td>
-                                    <td class="uk-text-truncate">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</td>
-                                    <td class="uk-text-nowrap">Lorem ipsum dolor</td>
-                                </tr>
-                                <tr>
-                                    <td><input class="uk-checkbox" type="checkbox"></td>
-                                    <td><img class="uk-preserve-width uk-border-circle" src="../media/images/avatar.jpg" width="40" alt=""></td>
-                                    <td class="uk-table-link">
-                                        <a class="uk-link-reset" href="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</a>
-                                    </td>
-                                    <td class="uk-text-truncate">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</td>
-                                    <td class="uk-text-nowrap">Lorem ipsum dolor</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <p class="uk-text-right" uk-margin>
+                    <button class="uk-button uk-button-secondary">Добавить</button>
+                    <button class="uk-button uk-button-primary">Сохранить</button>
+                </p>
+                <div class="uk-child-width-1-3@s" uk-grid>
+                        <div>
+                            <h4>Хоум Пицца</h4>
+                            <div uk-sortable="group: sortable-group-1; handle: .uk-sortable-handle;">
+                                <div class="uk-margin">
+                                    <div class="uk-card uk-card-default uk-card-body uk-card-small">
+                                        <span class="uk-sortable-handle uk-margin-small-right" uk-icon="icon: table"></span>
+                                        Ланчи
+                                        <span style="float: right;">
+                                            <a href="#" uk-icon="forward" uk-tooltip="Скрыть"></a>
+                                            <a href="#" uk-icon="file-edit" uk-tooltip="Редактировать"></a>
+                                            <a href="#" uk-icon="trash" uk-tooltip="Удалить"></a>
+                                        </span>
+                                        <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid sub-card-boxes">
+                                            <label><input class="uk-checkbox" type="checkbox"> Сортировать по цене</label>
+                                            <label><input class="uk-checkbox" type="checkbox"> Скидка за самовывоз</label>
+                                            <label><input class="uk-checkbox" type="checkbox"> Новинка</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="uk-margin">
+                                    <div class="uk-card uk-card-default uk-card-body uk-card-small">
+                                        <span class="uk-sortable-handle uk-margin-small-right" uk-icon="icon: table"></span>
+                                        Пицца
+                                        <span style="float: right;">
+                                            <a href="#" uk-icon="forward" uk-tooltip="Скрыть"></a>
+                                            <a href="#" uk-icon="file-edit" uk-tooltip="Редактировать"></a>
+                                            <a href="#" uk-icon="trash" uk-tooltip="Удалить"></a>
+                                        </span>
+                                        <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid sub-card-boxes">
+                                            <label><input class="uk-checkbox" type="checkbox"> Сортировать по цене</label>
+                                            <label><input class="uk-checkbox" type="checkbox"> Скидка за самовывоз</label>
+                                            <label><input class="uk-checkbox" type="checkbox"> Новинка</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="uk-margin">
+                                    <div class="uk-card uk-card-default uk-card-body uk-card-small">
+                                        <span class="uk-sortable-handle uk-margin-small-right" uk-icon="icon: table"></span>
+                                        Роллы
+                                        <span style="float: right;">
+                                            <a href="#" uk-icon="forward" uk-tooltip="Скрыть"></a>
+                                            <a href="#" uk-icon="file-edit" uk-tooltip="Редактировать"></a>
+                                            <a href="#" uk-icon="trash" uk-tooltip="Удалить"></a>
+                                        </span>
+                                        <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid sub-card-boxes">
+                                            <label><input class="uk-checkbox" type="checkbox"> Сортировать по цене</label>
+                                            <label><input class="uk-checkbox" type="checkbox"> Скидка за самовывоз</label>
+                                            <label><input class="uk-checkbox" type="checkbox"> Новинка</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="uk-margin">
+                                    <div class="uk-card uk-card-default uk-card-body uk-card-small">
+                                        <span class="uk-sortable-handle uk-margin-small-right" uk-icon="icon: table"></span>
+                                        Напитки
+                                        <span style="float: right;">
+                                            <a href="#" uk-icon="forward" uk-tooltip="Скрыть"></a>
+                                            <a href="#" uk-icon="file-edit" uk-tooltip="Редактировать"></a>
+                                            <a href="#" uk-icon="trash" uk-tooltip="Удалить"></a>
+                                        </span>
+                                        <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid sub-card-boxes">
+                                            <label><input class="uk-checkbox" type="checkbox"> Сортировать по цене</label>
+                                            <label><input class="uk-checkbox" type="checkbox"> Скидка за самовывоз</label>
+                                            <label><input class="uk-checkbox" type="checkbox"> Новинка</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div>
+                            <h4>Хоум Суши</h4>
+                            <div uk-sortable="group: sortable-group-2; handle: .uk-sortable-handle;"">
+                                <div class="uk-margin">
+                                    <div class="uk-card uk-card-default uk-card-body uk-card-small">
+                                        <span class="uk-sortable-handle uk-margin-small-right" uk-icon="icon: table"></span>
+                                        Ланчи
+                                        <span style="float: right;">
+                                            <a href="#" uk-icon="forward" uk-tooltip="Скрыть"></a>
+                                            <a href="#" uk-icon="file-edit" uk-tooltip="Редактировать"></a>
+                                            <a href="#" uk-icon="trash" uk-tooltip="Удалить"></a>
+                                        </span>
+                                        <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid sub-card-boxes">
+                                            <label><input class="uk-checkbox" type="checkbox"> Сортировать по цене</label>
+                                            <label><input class="uk-checkbox" type="checkbox"> Скидка за самовывоз</label>
+                                            <label><input class="uk-checkbox" type="checkbox"> Новинка</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="uk-margin">
+                                    <div class="uk-card uk-card-default uk-card-body uk-card-small">
+                                        <span class="uk-sortable-handle uk-margin-small-right" uk-icon="icon: table"></span>
+                                        Пицца
+                                        <span style="float: right;">
+                                            <a href="#" uk-icon="forward" uk-tooltip="Скрыть"></a>
+                                            <a href="#" uk-icon="file-edit" uk-tooltip="Редактировать"></a>
+                                            <a href="#" uk-icon="trash" uk-tooltip="Удалить"></a>
+                                        </span>
+                                        <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid sub-card-boxes">
+                                            <label><input class="uk-checkbox" type="checkbox"> Сортировать по цене</label>
+                                            <label><input class="uk-checkbox" type="checkbox"> Скидка за самовывоз</label>
+                                            <label><input class="uk-checkbox" type="checkbox"> Новинка</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="uk-margin">
+                                    <div class="uk-card uk-card-default uk-card-body uk-card-small">
+                                        <span class="uk-sortable-handle uk-margin-small-right" uk-icon="icon: table"></span>
+                                        Роллы
+                                        <span style="float: right;">
+                                            <a href="#" uk-icon="forward" uk-tooltip="Скрыть"></a>
+                                            <a href="#" uk-icon="file-edit" uk-tooltip="Редактировать"></a>
+                                            <a href="#" uk-icon="trash" uk-tooltip="Удалить"></a>
+                                        </span>
+                                        <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid sub-card-boxes">
+                                            <label><input class="uk-checkbox" type="checkbox"> Сортировать по цене</label>
+                                            <label><input class="uk-checkbox" type="checkbox"> Скидка за самовывоз</label>
+                                            <label><input class="uk-checkbox" type="checkbox"> Новинка</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="uk-margin">
+                                    <div class="uk-card uk-card-default uk-card-body uk-card-small">
+                                        <span class="uk-sortable-handle uk-margin-small-right" uk-icon="icon: table"></span>
+                                        Напитки
+                                        <span style="float: right;">
+                                            <a href="#" uk-icon="forward" uk-tooltip="Скрыть"></a>
+                                            <a href="#" uk-icon="file-edit" uk-tooltip="Редактировать"></a>
+                                            <a href="#" uk-icon="trash" uk-tooltip="Удалить"></a>
+                                        </span>
+                                        <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid sub-card-boxes">
+                                            <label><input class="uk-checkbox" type="checkbox"> Сортировать по цене</label>
+                                            <label><input class="uk-checkbox" type="checkbox"> Скидка за самовывоз</label>
+                                            <label><input class="uk-checkbox" type="checkbox"> Новинка</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4>Скрыты</h4>
+                            <div uk-sortable="group: sortable-group-3; handle: .uk-sortable-handle;">
+                                <div class="uk-margin">
+                                    <div class="uk-card uk-card-default uk-card-body uk-card-small">
+                                        <span class="uk-sortable-handle uk-margin-small-right" uk-icon="icon: table"></span>
+                                        Боксы 
+                                        <sup class="show-menu-category">
+                                            <a href="">Хоум Пицца</a>
+                                            <a href="">Хоум Суши</a>
+                                        </sup>
+                                        <span style="float: right;">
+                                            <a href="#" uk-icon="file-edit" uk-tooltip="Редактировать"></a>
+                                            <a href="#" uk-icon="trash" uk-tooltip="Удалить"></a>
+                                        </span>
+                                        <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid sub-card-boxes">
+                                            <label><input class="uk-checkbox" type="checkbox"> Сортировать по цене</label>
+                                            <label><input class="uk-checkbox" type="checkbox"> Скидка за самовывоз</label>
+                                            <label><input class="uk-checkbox" type="checkbox"> Новинка</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
             </div>
         </div>

@@ -134,9 +134,49 @@ div.container-card {
     border-radius: 3px;
     min-height: 650px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .2);
+    padding-bottom: 30px;
+    margin-bottom: 30px;
 }
 
 div.container-dashboard {
     max-width: 88%;
     padding: 0px !important;
+}
+
+.uk-button-secondary {
+    background-color: #5f0506;
+}
+.uk-button-secondary:hover {
+    background-color: #4b0507;
+}
+
+.uk-button-secondary:focus-within {
+    background-color: #5f0506;
+}
+
+.uk-button-primary {
+    background-color: #e9a800;
+}
+
+.uk-button-primary:hover {
+    background-color: #d39803;
+}
+
+.uk-button-primary:focus-within {
+    background-color: #e9a800;
+}
+
+.sub-card-boxes {
+    font-size: 12px;
+}
+
+.show-menu-category a {
+    text-decoration: none;
+    color: #360300;
+    border-bottom: 1px dotted #360300;
+}
+
+.show-menu-category a:hover {
+    text-decoration: line-through;
+    border: none;
 }
