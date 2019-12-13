@@ -9,25 +9,25 @@
 
     <!-- Styles -->
     <link rel="shortcut icon" href="vima.ico" type="image/x-icon">
-    <link rel="stylesheet" href="static/uikit/css/uikit.min.css">
-    <link rel="stylesheet" href="static/css/custom.css">
+    <link rel="stylesheet" href="../static/uikit/css/uikit.min.css">
+    <link rel="stylesheet" href="../static/css/custom.css">
 </head>
 <body>
     <!-- Desktop menu -->
     <nav class="uk-navbar-container uk-custom-navbar uk-visible@m" uk-navbar>
         <div class="uk-navbar-left uk-margin-left">
-            <a class="uk-navbar-item uk-logo" href="">
-                <img data-src="static/images/logo_short.png" alt="Хоум пицца" width="85" uk-img>
+            <a class="uk-navbar-item uk-logo" href="/">
+                <img data-src="../static/images/logo_short.png" alt="Хоум пицца" width="85" uk-img>
             </a>
             <ul class="uk-navbar-nav">
                 <li class="uk-active"><a href="index.html">Витрина</a></li>
-                <li><a href="cms.html">Информация (CMS)</a></li>
-                <li><a href="offers.html">Вакансии и кандидаты</a></li>
+                <li><a href="../cms.html">Информация (CMS)</a></li>
+                <li><a href="../offers.html">Вакансии и кандидаты</a></li>
                 <li>
                     <a href="#"><s>Акции и промокоды</s></a>
                 </li>
                 <li><a href="#"><s>Рассылки</s></a></li>
-                <li><a href="report.html">Отчеты</a></li>
+                <li><a href="../report.html">Отчеты</a></li>
             </ul>
         </div>
         <div class="uk-navbar-right uk-margin-right">
@@ -63,7 +63,7 @@
             <ul class="uk-nav uk-nav-default" uk-nav>
                 <li class="uk-nav-header">Справочники</li>
                 <li>
-                    <a href="pages/list.html">
+                    <a href="list.html">
                         <span class="uk-margin-small-right" uk-icon="icon: file-text"></span> Категории блюд
                     </a>
                 </li>
@@ -85,7 +85,7 @@
                 <li class="uk-nav-header">Управление</li>
                 <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: clock"></span> Работа сайта</a></li>
                 <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: image"></span> Слайдер</a></li>
-                <li><a href="pages/positions.html"><span class="uk-margin-small-right" uk-icon="icon: thumbnails"></span> Блюда</a></li>
+                <li class="uk-active"><a href="positions.html"><span class="uk-margin-small-right" uk-icon="icon: thumbnails"></span> Блюда</a></li>
                 <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: cart"></span> Настройки оформления</a></li>
             </ul>
         </div>
@@ -94,53 +94,76 @@
     <!-- Content block -->
     <div class="content-header uk-text-right">
         <div class="content-bar">
-            <h2>Показатели витрины</h2>
+            <h2>
+                <div uk-form-custom="target: > * > span:first-child" style="float: left; color: #5f0506;">
+                    <select>
+                        <option value="">Главная страница</option>
+                        <option value="1">Пицца</option>
+                        <option value="2">Роллы</option>
+                        <option value="3">Пироги</option>
+                        <option value="4">ВОК</option>
+                        <option value="5">Ланчи</option>
+                        <option value="6">Закуски</option>
+                        <option value="7">Салаты и супы</option>
+                        <option value="8">Десерты</option>
+                        <option value="9">Напитки</option>
+                        <option value="10">Соусы и приборы</option>
+                    </select>
+                    <button class="uk-button uk-button-default" type="button" tabindex="-1">
+                        <span></span>
+                        <span uk-icon="icon: chevron-down"></span>
+                    </button>
+                </div>
+                <ul class="uk-subnav uk-subnav-pill" uk-switcher style="float: left; margin-left: 10px; margin-top: 10px;">
+                    <li><a href="#">Хоум пицца</a></li>
+                    <li><a href="#">Хоум суши</a></li>
+                </ul>
+                Блюда меню
+            </h2>
         </div>
         <div class="uk-custom-container uk-container content container-dashboard uk-text-left">
         <!-- Воронка, кол-во заказов, кол-во фейлов + отправленных писем, состояние очереди -->
-            <div class="uk-grid-column-small uk-grid-row-medium uk-grid-match uk-child-width-1-4@s uk-text-center" uk-grid>
+            <div class="uk-grid-column-small uk-grid-row-medium uk-grid-match uk-child-width-1-4@s uk-text-center" uk-grid uk-sortable>
                 <div>
-                    <div class="uk-card uk-card-default uk-card-body">Item</div>
+                    <div class="uk-card uk-card-default uk-card-body">Акция 3 пиццы</div>
                 </div>
                 <div>
-                    <div class="uk-card uk-card-default uk-card-body">Item</div>
+                    <div class="uk-card uk-card-default uk-card-body">Акция 5 пицц</div>
                 </div>
                 <div>
-                    <div class="uk-card uk-card-default uk-card-body">Item</div>
+                    <div class="uk-card uk-card-default uk-card-body">Акция 6 пицц</div>
                 </div>
                 <div>
-                    <div class="uk-card uk-card-default uk-card-body">Item</div>
+                    <div class="uk-card uk-card-default uk-card-body">СУПЕРБОКС №1</div>
                 </div>
                 <div>
-                    <div class="uk-card uk-card-default uk-card-body">Item</div>
+                    <div class="uk-card uk-card-default uk-card-body">СУПЕРБОКС №2</div>
                 </div>
                 <div>
-                    <div class="uk-card uk-card-default uk-card-body">Item</div>
+                    <div class="uk-card uk-card-default uk-card-body">Баварская</div>
                 </div>
                 <div>
-                    <div class="uk-card uk-card-default uk-card-body">Item</div>
+                    <div class="uk-card uk-card-default uk-card-body">Виладжо</div>
                 </div>
                 <div>
-                    <div class="uk-card uk-card-default uk-card-body">Item</div>
+                    <div class="uk-card uk-card-default uk-card-body">Капрезе</div>
                 </div>
                 <div>
-                    <div class="uk-card uk-card-default uk-card-body">Item</div>
+                    <div class="uk-card uk-card-default uk-card-body">Римини</div>
                 </div>
                 <div>
-                    <div class="uk-card uk-card-default uk-card-body">Item</div>
+                    <div class="uk-card uk-card-default uk-card-body">Чикен BBQ</div>
                 </div>
                 <div>
-                    <div class="uk-card uk-card-default uk-card-body">Item</div>
+                    <div class="uk-card uk-card-default uk-card-body">Мясной двор </div>
                 </div>
                 <div>
-                    <div class="uk-card uk-card-default uk-card-body">Item</div>
+                    <div class="uk-card uk-card-default uk-card-body">Чизбургер </div>
                 </div>
             </div>
         </div>
     </div>
-
-
 </body>
-<script src="static/uikit/js/uikit.min.js"></script>
-<script src="static/uikit/js/uikit-icons.min.js"></script>
+<script src="../static/uikit/js/uikit.min.js"></script>
+<script src="../static/uikit/js/uikit-icons.min.js"></script>
 </html>

@@ -180,3 +180,8 @@ div.container-dashboard {
     text-decoration: line-through;
     border: none;
 }
+
+.uk-subnav-pill > .uk-active > a {
+    background-color: #e9a800;
+color: #fff;
+}
