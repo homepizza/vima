@@ -37,10 +37,31 @@
     background-color: #e9a800;
 }
 
+.uk-button-primary-hs {
+    color: #fff;
+    background-color: #fd6c2d;
+    border-radius: 5px;
+}
+
+.uk-button-primary-hs:hover {
+    color: #fff;
+    background-color: #e2632c;
+}
+
+.uk-button-primary-hs:focus-within {
+    background-color: #fd6c2d;
+}
+
+
 .uk-input {
     border-radius: 5px;
 }
 
 .uk-input:focus {
     border-color: #e9a800;
+}
+
+.custom-font {
+    font-family: 'BwSurco', 'Helvetica', sans-serif;
+    /* font-size: 20px; */
 }
