@@ -1,0 +1,46 @@
+#sign-in {
+    position: fixed; 
+    min-height: 100%; 
+    background: url('../images/farina-bianco-grafika.jpg') no-repeat;
+    background-color: antiquewhite;
+    width: 100%;
+}
+
+.signin-box {
+    margin: 0 auto;
+    margin-top: 20%;
+    width: 41%;
+}
+
+.uk-button-secondary {
+    background-color: #5f0506;
+    border-radius: 5px;
+}
+.uk-button-secondary:hover {
+    background-color: #4b0507;
+}
+
+.uk-button-secondary:focus-within {
+    background-color: #5f0506;
+}
+
+.uk-button-primary {
+    background-color: #e9a800;
+    border-radius: 5px;
+}
+
+.uk-button-primary:hover {
+    background-color: #d39803;
+}
+
+.uk-button-primary:focus-within {
+    background-color: #e9a800;
+}
+
+.uk-input {
+    border-radius: 5px;
+}
+
+.uk-input:focus {
+    border-color: #e9a800;
+}
